@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fcfb413337d1f1a59c69a89f4a7a1e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EulersFuneral.Runtime::EulersFuneral.Core.Data.LevelData
+  LevelIndex: 0
+  LevelName: 'Nivel 0: Identidad Diagonal'
+  Description: 'Tutorial: Construye un plano inclinado en X e Y para que la pelota
+    recoja las 3 estrellas rojas en diagonal.'
+  IsTutorial: 1
+  TitleVideoClip: {fileID: 32900000, guid: ac3864263ccc170f28824803ac044473, type: 3}
+  TitleSequence:
+  - ExpressionText: e^{i\pi} + 1 = 0
+    DurationSeconds: 1.2
+  - ExpressionText: + 0
+    DurationSeconds: 0.9
+  - ExpressionText: 0
+    DurationSeconds: 0.9
+  FinalDisplayedSymbol: 0
+  MinX: -5
+  MaxX: 5
+  MinY: -5
+  MaxY: 5
+  StartPointA: {x: -2.5, y: -2.5, z: 1}
+  ObjectivePointB: {x: 1.2824, y: 1.2824, z: -0.513}
+  StarPositions:
+  - {x: -1.6666, y: -1.6666, z: 0.6667}
+  - {x: -0.3433, y: -0.3433, z: 0.1373}
+  - {x: 1.2824, y: 1.2824, z: -0.513}
+  BallRadius: 0.25
+  StarRadius: 0.22
+  Gravity: 9.8
+  Restitution: 0
+  MaxTimeSeconds: 20
+  HasCeiling: 0
+  CeilingHeight: 4
+  CeilingFormula: 
+  UsesFloorMechanic: 0
+  UsesExponentialBase: 0
+  BaseTerrainFormula: 
+  ConceptualHint: Las 3 estrellas avanzan en diagonal (y = x). Necesitas un plano
+    con pendiente negativa tanto en x como en y (-ax - ay).

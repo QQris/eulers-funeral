@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fcfb413337d1f1a59c69a89f4a7a1e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: EulersFuneral.Runtime::EulersFuneral.Core.Data.LevelData
+  LevelIndex: 5
+  LevelName: 'Nivel 5: Euler''s Funeral'
+  Description: La superficie exponencial e^x acoplada con una curvatura en Y bajo
+    gravedad incrementada.
+  IsTutorial: 0
+  TitleVideoClip: {fileID: 32900000, guid: 7161ed33f1c8844a7803f72c480dc256, type: 3}
+  TitleSequence:
+  - ExpressionText: e^{i\pi} + 1 + 5
+    DurationSeconds: 1.5
+  - ExpressionText: 5
+    DurationSeconds: 1.5
+  FinalDisplayedSymbol: 5
+  MinX: -5
+  MaxX: 5
+  MinY: -5
+  MaxY: 5
+  StartPointA: {x: 1.2, y: 1.4, z: 3.7121}
+  ObjectivePointB: {x: -1.9488, y: 0.3983, z: 0.1742}
+  StarPositions:
+  - {x: 0.9362, y: 1.3536, z: 2.9167}
+  - {x: 0.093, y: 1.1662, z: 1.3695}
+  - {x: -1.9488, y: 0.3983, z: 0.1742}
+  BallRadius: 0.25
+  StarRadius: 0.22
+  Gravity: 12.5
+  Restitution: 0.1
+  MaxTimeSeconds: 20
+  HasCeiling: 0
+  CeilingHeight: 4
+  CeilingFormula: 
+  UsesFloorMechanic: 0
+  UsesExponentialBase: 1
+  BaseTerrainFormula: e^x + 0.2*y^2
+  ConceptualHint: "Combina la funci\xF3n exponencial e^x (que impulsa hacia -X) con
+    un valle parab\xF3lico suave en y^2 que dirija la pelota desde y = 1.4 hacia
+    el eje central."
