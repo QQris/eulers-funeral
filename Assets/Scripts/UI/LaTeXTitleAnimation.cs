@@ -10,32 +10,18 @@ using UnityEngine.Video;
 namespace EulersFuneral.UI
 {
     /// <summary>
-    /// RF-04: Reproduce el video de transición Manim correspondiente al nivel (Nivel0.mp4 .. Nivel5.mp4)
+    /// RF-04: Reproduce el video de transición Manim correspondiente al nivel (Nivel0.webm .. Nivel5.webm)
     /// y aplica una transición suave de opacidad al pasar a la fase de edición.
     /// </summary>
     public class LaTeXTitleAnimation : MonoBehaviour
     {
-        public const float DefaultTotalDuration = 3.0f;
-
         [Header("Referencias UI y Video Manim")]
         public CanvasGroup OverlayGroup;
         public RawImage VideoDisplayRawImage;
         public VideoPlayer ManimVideoPlayer;
-        public VideoClip[] LevelVideoClips = new VideoClip[6];
+        public VideoClip[] LevelVideoClips = new VideoClip[LevelData.TotalLevels];
 
-        public RawImage ManimVideoRawImage
-        {
-            get => VideoDisplayRawImage;
-            set => VideoDisplayRawImage = value;
-        }
-
-        public VideoPlayer VideoPlayerComponent
-        {
-            get => ManimVideoPlayer;
-            set => ManimVideoPlayer = value;
-        }
-
-        [Header("Respaldo Tipográfico (Opcional)")]
+        [Header("Objetos de Texto Opcionales (Ocultos durante el video)")]
         public TextMeshProUGUI PrimaryGlyphText;
         public TextMeshProUGUI SecondaryGlyphText;
         public TextMeshProUGUI SubtitleText;
@@ -104,7 +90,6 @@ namespace EulersFuneral.UI
                 OverlayGroup.blocksRaycasts = true;
             }
 
-            // Ocultar textos antiguos cuando se usa el video de Manim
             if (PrimaryGlyphText != null) PrimaryGlyphText.gameObject.SetActive(false);
             if (SecondaryGlyphText != null) SecondaryGlyphText.gameObject.SetActive(false);
             if (SubtitleText != null) SubtitleText.gameObject.SetActive(false);
@@ -134,7 +119,6 @@ namespace EulersFuneral.UI
                     _renderTexture.Create();
                 }
 
-                // Limpiar el RenderTexture a negro antes de reproducir
                 RenderTexture prevActive = RenderTexture.active;
                 RenderTexture.active = _renderTexture;
                 GL.Clear(true, true, Color.black);
@@ -189,13 +173,7 @@ namespace EulersFuneral.UI
                 ManimVideoPlayer.errorReceived -= OnVideoErrorReceived;
                 ManimVideoPlayer.Stop();
             }
-            else
-            {
-                // Respaldo tipográfico solo si no existiera el archivo de video
-                yield return AnimateFallbackTextRoutine(level);
-            }
 
-            // Transición suave de aumento de opacidad del contenido presente (fade-out del overlay de video)
             const float fadeOutDuration = 0.55f;
             float fadeElapsed = 0f;
             while (fadeElapsed < fadeOutDuration)
@@ -229,32 +207,6 @@ namespace EulersFuneral.UI
         {
             Debug.LogWarning($"[LaTeXTitleAnimation] Error reproduciendo video: {message}");
             _videoFinished = true;
-        }
-
-        private IEnumerator AnimateFallbackTextRoutine(LevelData level)
-        {
-            if (PrimaryGlyphText != null)
-            {
-                PrimaryGlyphText.gameObject.SetActive(true);
-                PrimaryGlyphText.text = FormatLaTeXToRichText(level != null ? level.FinalDisplayedSymbol : "");
-                PrimaryGlyphText.alpha = 1f;
-            }
-            yield return new WaitForSecondsRealtime(2.0f);
-        }
-
-        public static string FormatLaTeXToRichText(string latex)
-        {
-            if (string.IsNullOrEmpty(latex))
-                return string.Empty;
-
-            return latex
-                .Replace("e^{i\\pi}", "<i>e</i><sup><i>i</i>\u00B7pi</sup>")
-                .Replace("e^{\\ln 4}", "<i>e</i><sup>ln 4</sup>")
-                .Replace("e^4", "<i>e</i><sup>4</sup>")
-                .Replace("\\lfloor e \\rfloor", "floor(<i>e</i>)")
-                .Replace("\\lceil e \\rceil", "ceil(<i>e</i>)")
-                .Replace("\\lim_{n\\to\\infty} (1 + 4/n)^n", "lim<sub><i>n</i>->inf</sub> (1 + 4/<i>n</i>)<sup><i>n</i></sup>")
-                .Replace("\\pi", "pi");
         }
     }
 }

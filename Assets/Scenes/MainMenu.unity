@@ -469,7 +469,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<b>SELECCI\xD3N DE NIVELES (0 - 5)</b>"
+  m_text: "<b>SELECCI\xD3N DE NIVELES</b>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1466,7 +1466,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 3956725462
   m_fontColor: {r: 0.84, g: 0.84, b: 0.84, a: 0.92}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1479,7 +1479,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -2276,7 +2276,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 3956725462
   m_fontColor: {r: 0.84, g: 0.84, b: 0.84, a: 0.92}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -2289,7 +2289,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -3093,7 +3093,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 3956725462
   m_fontColor: {r: 0.84, g: 0.84, b: 0.84, a: 0.92}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -3106,7 +3106,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -4188,14 +4188,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: "<b>BIENVENIDO A EULER'S FUNERAL</b>\n\n<b>Objetivo General:</b>\nGu\xEDa
     la pelota blanca desde el marcador de inicio (A) para recolectar las <b>3 estrellas
-    rojas</b> distribuidas en el espacio 3D (ejes X, Y y altura Z).\n\n<b>Controles:</b>\n\u2022
-    <b>Clic derecho sostenido:</b> Orbitar la c\xE1mara 3D (sin bajar del plano).\n\u2022
-    <b>Rueda del rat\xF3n:</b> Zoom (acercar / alejar).\n\u2022 <b>Teclado:</b> Escribe
-    la ecuaci\xF3n de dos variables <i>f(x, y)</i> en espa\xF1ol; la malla de 100\xD7100
-    puntos se genera autom\xE1ticamente al ser v\xE1lida (admite multiplicaci\xF3n
-    impl\xEDcita como <i>-0.2x - 0.2y</i>, <i>0.2y^2 - 0.25x</i>, <i>sen(x)</i>,
-    <i>floor(x)</i>, <i>ceil(x)</i>, <i>e^x</i>).\n\u2022 <b>Lanzar:</b> Inicia la
-    simulaci\xF3n f\xEDsica Lagrangiana (RK4)."
+    rojas</b> distribuidas en el espacio.\n\n<b>Controles:</b>\n\u2022 <b>Clic derecho
+    sostenido:</b> Orbitar la c\xE1mara.\n\u2022 <b>Rueda del rat\xF3n:</b> Zoom
+    (acercar / alejar).\n\u2022 <b>Teclado:</b> Escribe la ecuaci\xF3n de dos variables
+    <i>f(x, y)</i> \n\u2022 <b>Lanzar:</b> Reproduce el movimiento de la pelota."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5244,7 +5240,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 3956725462
   m_fontColor: {r: 0.84, g: 0.84, b: 0.84, a: 0.92}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -5257,7 +5253,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -5858,19 +5854,19 @@ Canvas:
   m_GameObject: {fileID: 1820274616}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 597324310}
+  m_PlaneDistance: 0.25
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!224 &1820274621
 RectTransform:

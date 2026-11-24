@@ -8,14 +8,8 @@ using UnityEngine;
 
 namespace EulersFuneral.Gameplay
 {
-    /// <summary>
-    /// RF-08, RF-09, RF-10, RF-11, RF-13:
-    /// Controla la partícula/esfera blanca con integración RK4 de paso fijo (dt = 1/120 s)
-    /// e interpolación de estado para renderizado fluido a 60 FPS.
-    /// </summary>
-    public class BallController : MonoBehaviour
+   public class BallController : MonoBehaviour
     {
-        /// <summary>Escala solo visual de la esfera (la física y las colisiones usan BallRadius completo).</summary>
         public const float VisualScale = 0.6f;
 
         public SimulationStatus Status { get; private set; } = SimulationStatus.Ready;
@@ -126,7 +120,6 @@ namespace EulersFuneral.Gameplay
                 return;
             }
 
-            // Start on the player's surface at (A.x, A.y); only drop in airborne mode if the surface is far below A.z
             double heightDiff = _level.StartPointA.z - zAtStart;
             if (heightDiff > _level.BallRadius * 1.5f)
             {
@@ -194,7 +187,6 @@ namespace EulersFuneral.Gameplay
                 CheckStarsAndObjectiveSubsteps(in _prevState, in _currState);
             }
 
-            // Interpolate for smooth 60 FPS rendering (Section 4)
             double alpha = _accumulator / fixedDt;
             BallState renderState = BallState.Lerp(in _prevState, in _currState, alpha);
             transform.position = MathCoords.ToUnity(renderState.X, renderState.Y, renderState.Z);

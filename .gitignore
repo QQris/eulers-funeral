@@ -33,3 +33,18 @@
 # Archivos temporales del sistema operativo
 .DS_Store
 Thumbs.db
+*~
+
+# Documentación, capturas y archivos LaTeX (no subir a GitHub)
+docs/
+figures/
+figuras/
+*.pdf
+*.tex
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

@@ -110,8 +110,8 @@ namespace EulersFuneral.Audio
             while (true)
             {
                 EnsureMusicClipsLoaded();
-                playlist[0] = MainThemeClip;
-                playlist[1] = LevelsSong1Clip;
+                playlist[1] = MainThemeClip;
+                playlist[0] = LevelsSong1Clip;
                 playlist[2] = LevelsSong2Clip;
 
                 AudioClip clip = playlist[currentTrackIndex];
@@ -198,7 +198,7 @@ namespace EulersFuneral.Audio
         {
             if (_sfxSource == null || _starClip == null) return;
             _sfxSource.pitch = 1.0f + (starNumber - 1) * 0.15f;
-            _sfxSource.PlayOneShot(_starClip, 0.7f * _masterVolume);
+            _sfxSource.PlayOneShot(_starClip, 0.3f * _masterVolume);
             _sfxSource.pitch = 1.0f;
         }
 
@@ -207,7 +207,7 @@ namespace EulersFuneral.Audio
             StopRollingSound();
             if (_sfxSource != null && _victoryClip != null)
             {
-                _sfxSource.PlayOneShot(_victoryClip, 0.8f * _masterVolume);
+                _sfxSource.PlayOneShot(_victoryClip, 0.3f * _masterVolume);
             }
         }
 
@@ -216,7 +216,7 @@ namespace EulersFuneral.Audio
             StopRollingSound();
             if (_sfxSource != null && _defeatClip != null)
             {
-                _sfxSource.PlayOneShot(_defeatClip, 0.75f * _masterVolume);
+                _sfxSource.PlayOneShot(_defeatClip, 0.3f * _masterVolume);
             }
         }
 

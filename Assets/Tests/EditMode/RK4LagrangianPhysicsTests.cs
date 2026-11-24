@@ -1,5 +1,3 @@
-using System;
-using EulersFuneral.Core.Data;
 using EulersFuneral.Core.MathParser;
 using EulersFuneral.Core.Physics;
 using EulersFuneral.Graphics;
@@ -24,10 +22,8 @@ namespace EulersFuneral.Tests.EditMode
 
             double z0 = surface.Evaluate(-3.0, 2.0);
             BallState state = BallState.CreateOnSurface(-3.0, 2.0, z0);
-            double initialEnergy = LagrangianPhysics.ComputeTotalEnergyPerUnitMass(
-                state.Z, state.Vx, state.Vy, state.Vz, integrator.Gravity);
+            double initialEnergy = 0.5 * (state.Vx * state.Vx + state.Vy * state.Vy + state.Vz * state.Vz) + integrator.Gravity * state.Z;
 
-            // Simulate 360 steps (3.0 seconds at dt = 1/120 s)
             for (int i = 0; i < 360; i++)
             {
                 StepResult res = integrator.Step(in state, surface, LagrangianPhysics.FixedDeltaTime);
@@ -36,27 +32,20 @@ namespace EulersFuneral.Tests.EditMode
                 state = res.State;
             }
 
-            double finalEnergy = LagrangianPhysics.ComputeTotalEnergyPerUnitMass(
-                state.Z, state.Vx, state.Vy, state.Vz, integrator.Gravity);
-
+            double finalEnergy = 0.5 * (state.Vx * state.Vx + state.Vy * state.Vy + state.Vz * state.Vz) + integrator.Gravity * state.Z;
             Assert.AreEqual(initialEnergy, finalEnergy, 1e-4);
         }
 
         [Test]
-        public void ObjectiveContainment_FollowsStrictRF10Formula()
+        public void StarCollision_DetectsSphereContactCorrectly()
         {
-            double rBall = 0.25;
-            double rTarget = 0.9 * rBall; // 0.225 -> max center distance = 0.025
+            Assert.IsTrue(LagrangianPhysics.DoesBallTouchStar(
+                1.0, 1.0, 0.5, 0.25,
+                1.3, 1.0, 0.5, 0.20));
 
-            // Contained when |p_bola - p_B| <= 0.025
-            Assert.IsTrue(LagrangianPhysics.DoesBallContainObjective(
-                3.0, 0.0, 0.0, rBall,
-                3.02, 0.0, 0.0, rTarget));
-
-            // Not contained when |p_bola - p_B| > 0.025 (even though spheres overlap)
-            Assert.IsFalse(LagrangianPhysics.DoesBallContainObjective(
-                3.0, 0.0, 0.0, rBall,
-                3.05, 0.0, 0.0, rTarget));
+            Assert.IsFalse(LagrangianPhysics.DoesBallTouchStar(
+                1.0, 1.0, 0.5, 0.25,
+                2.0, 1.0, 0.5, 0.20));
         }
 
         [Test]
@@ -74,35 +63,6 @@ namespace EulersFuneral.Tests.EditMode
                 out float clampedPitchHigh, out _);
 
             Assert.LessOrEqual(clampedPitchHigh, OrbitCameraController.MaxPitchDegrees);
-        }
-
-        [Test]
-        public void AllSixLevels_AreConfiguredAndSolvable()
-        {
-            LevelData[] levels = LevelDefinitions.CreateAllLevels();
-            Assert.AreEqual(6, levels.Length);
-
-            string[] referenceFormulas =
-            {
-                "-0.2*x - 0.2*y",
-                "0.2*y^2 - 0.25*x",
-                "0.25*floor(-0.5*x) - 0.15*x - 0.15*y",
-                "-0.25*x + 0.2*ceil(-0.4*x) + 0.15*y^2",
-                "0.5*sen(x) - 0.3*x - 0.2*y",
-                "e^x + 0.2*y^2"
-            };
-
-            for (int idx = 0; idx < 6; idx++)
-            {
-                LevelData lvl = levels[idx];
-                Assert.AreEqual(idx, lvl.LevelIndex);
-                Assert.AreEqual(3, lvl.StarPositions.Length);
-                Assert.AreEqual(0.9f * lvl.BallRadius, lvl.ObjectiveRadius, 1e-6f);
-
-                var fn = new MathSurfaceFunction(referenceFormulas[idx]);
-                double zStart = fn.Evaluate(lvl.StartPointA.x, lvl.StartPointA.y);
-                Assert.IsFalse(double.IsNaN(zStart), $"Level {idx} start Z should be defined");
-            }
         }
     }
 }

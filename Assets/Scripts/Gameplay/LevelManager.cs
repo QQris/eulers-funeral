@@ -24,7 +24,7 @@ namespace EulersFuneral.Gameplay
 
     /// <summary>
     /// Orquesta el flujo completo de los niveles 0 a 5 en la escena Gameplay:
-    /// Animación de título (RF-04), Mesa 3D (RF-05), Entrada de fórmula (RF-06),
+    /// Transición de título Manim (RF-04), Mesa 3D (RF-05), Entrada de fórmula (RF-06),
     /// Pistas (RF-07), Simulación RK4 (RF-08), Estrellas (RF-09),
     /// Derrota (RF-11) y Reinicio/Progreso (RF-12).
     /// </summary>
@@ -69,16 +69,6 @@ namespace EulersFuneral.Gameplay
 
         private float _previousGravity = 9.8f;
         private bool _eventsBound;
-
-        private void Awake()
-        {
-            if (ConfiguredLevels == null || ConfiguredLevels.Length == 0)
-            {
-                ConfiguredLevels = LevelDefinitions.CreateAllLevels();
-            }
-
-            EnsureSceneMarkersExist();
-        }
 
         private void Start()
         {
@@ -126,124 +116,12 @@ namespace EulersFuneral.Gameplay
 
             if (ReturnToMenuButton != null)
                 ReturnToMenuButton.onClick.AddListener(ReturnToMainMenu);
-
-            ApplyCenteredHudLayout();
-        }
-
-        private void ApplyCenteredHudLayout()
-        {
-            if (GameplayHudRoot == null)
-                return;
-
-            Transform topBarTr = GameplayHudRoot.transform.Find("TopBar");
-            if (topBarTr != null)
-            {
-                RectTransform topRt = topBarTr.GetComponent<RectTransform>();
-                if (topRt != null)
-                {
-                    topRt.anchorMin = new Vector2(0.12f, 0.90f);
-                    topRt.anchorMax = new Vector2(0.88f, 0.97f);
-                }
-
-                SetChildAnchors(topBarTr, "LevelHeader", new Vector2(0.02f, 0f), new Vector2(0.38f, 1f), TextAlignmentOptions.Center);
-                SetChildAnchors(topBarTr, "StarsCounter", new Vector2(0.39f, 0f), new Vector2(0.55f, 1f), TextAlignmentOptions.Center);
-                SetChildAnchors(topBarTr, "TimerText", new Vector2(0.56f, 0f), new Vector2(0.72f, 1f), TextAlignmentOptions.Center);
-                SetChildAnchors(topBarTr, "ToggleHintsBtn", new Vector2(0.73f, 0.12f), new Vector2(0.86f, 0.88f));
-                SetChildAnchors(topBarTr, "MenuBtn", new Vector2(0.87f, 0.12f), new Vector2(0.98f, 0.88f));
-            }
-
-            Transform bottomBarTr = GameplayHudRoot.transform.Find("BottomFormulaBar");
-            if (bottomBarTr != null)
-            {
-                RectTransform botRt = bottomBarTr.GetComponent<RectTransform>();
-                if (botRt != null)
-                {
-                    botRt.anchorMin = new Vector2(0.18f, 0.03f);
-                    botRt.anchorMax = new Vector2(0.82f, 0.20f);
-                }
-
-                SetChildAnchors(bottomBarTr, "FormulaPrefix", new Vector2(0.20f, 0.68f), new Vector2(0.80f, 0.96f), TextAlignmentOptions.Center);
-                SetChildAnchors(bottomBarTr, "FormulaInputField", new Vector2(0.12f, 0.28f), new Vector2(0.56f, 0.66f));
-                SetChildAnchors(bottomBarTr, "LaunchBtn", new Vector2(0.58f, 0.28f), new Vector2(0.74f, 0.66f));
-                SetChildAnchors(bottomBarTr, "ResetBtn", new Vector2(0.75f, 0.28f), new Vector2(0.91f, 0.66f));
-                SetChildAnchors(bottomBarTr, "ValidationText", new Vector2(0.05f, 0.02f), new Vector2(0.95f, 0.25f), TextAlignmentOptions.Center);
-            }
-        }
-
-        private static void SetChildAnchors(Transform parent, string childName, Vector2 anchorMin, Vector2 anchorMax, TextAlignmentOptions? align = null)
-        {
-            Transform child = parent.Find(childName);
-            if (child == null) return;
-
-            RectTransform rt = child.GetComponent<RectTransform>();
-            if (rt != null)
-            {
-                rt.anchorMin = anchorMin;
-                rt.anchorMax = anchorMax;
-                rt.offsetMin = Vector2.zero;
-                rt.offsetMax = Vector2.zero;
-            }
-
-            if (align.HasValue)
-            {
-                TextMeshProUGUI tmp = child.GetComponent<TextMeshProUGUI>();
-                if (tmp != null)
-                {
-                    tmp.alignment = align.Value;
-                }
-            }
-        }
-
-        public void EnsureSceneMarkersExist()
-        {
-            if (StartMarkerA == null)
-            {
-                StartMarkerA = CreateSpherePrimitive("StartMarker_A", new Color(0.35f, 0.72f, 1.0f, 0.9f), 0.14f);
-            }
-
-            if (StarObjects == null || StarObjects.Length < 3)
-            {
-                StarObjects = new GameObject[3];
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (StarObjects[i] == null)
-                {
-                    StarObjects[i] = CreateSpherePrimitive($"Star_{i + 1}", new Color(1.0f, 0.18f, 0.18f, 1.0f), 0.36f);
-                }
-            }
-        }
-
-        private GameObject CreateSpherePrimitive(string objName, Color color, float diameter)
-        {
-            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            go.name = objName;
-            go.transform.SetParent(transform, false);
-            go.transform.localScale = Vector3.one * diameter;
-
-            Collider col = go.GetComponent<Collider>();
-            if (col != null)
-            {
-                if (Application.isPlaying) Destroy(col);
-                else DestroyImmediate(col);
-            }
-
-            Renderer rend = go.GetComponent<Renderer>();
-            if (rend != null)
-            {
-                rend.sharedMaterial = MaterialHelper.CreateUnlitColorMaterial(color);
-            }
-
-            return go;
         }
 
         public void StartLevel(int levelIndex)
         {
             if (ConfiguredLevels == null || ConfiguredLevels.Length == 0)
-            {
-                ConfiguredLevels = LevelDefinitions.CreateAllLevels();
-            }
+                return;
 
             levelIndex = Mathf.Clamp(levelIndex, 0, ConfiguredLevels.Length - 1);
             GameSessionContext.SelectedLevelIndex = levelIndex;
@@ -258,7 +136,6 @@ namespace EulersFuneral.Gameplay
             if (AxesVisualizer != null)
                 AxesVisualizer.RebuildTable(CurrentLevel.MinX, CurrentLevel.MaxX, CurrentLevel.MinY, CurrentLevel.MaxY);
 
-            EnsureSceneMarkersExist();
             PositionLevelEntities(CurrentLevel);
 
             if (Ball != null)
@@ -284,7 +161,7 @@ namespace EulersFuneral.Gameplay
                 LevelHeaderText.text = CurrentLevel.LevelName;
             }
 
-            // RF-04: Reproducir animación de título de 3 s antes de pasar a la fase de edición
+            // RF-04: Reproducir transición de video Manim antes de pasar a la fase de edición
             Phase = LevelPhase.TitleAnimation;
             if (GameplayHudRoot != null)
                 GameplayHudRoot.SetActive(false);
@@ -310,7 +187,7 @@ namespace EulersFuneral.Gameplay
                 }
             }
 
-            // RF-03: Mostrar ayuda inicial en la primera apertura o nivel tutorial
+            // RF-03: Mostrar ayuda inicial en la primera apertura
             if (InitialHelp != null)
             {
                 InitialHelp.ShowIfFirstTime();
@@ -374,7 +251,7 @@ namespace EulersFuneral.Gameplay
 
             Phase = LevelPhase.AnimatingSurface;
             if (FormulaInput != null)
-                FormulaInput.SetInteractable(false, true);
+                FormulaInput.SetInteractable(false);
 
             if (HintsPanel != null)
                 HintsPanel.SetContext(CurrentLevel, function);
@@ -534,7 +411,6 @@ namespace EulersFuneral.Gameplay
                 UpdateHudCounters(Ball.CollectedStarsCount, (float)Ball.CurrentState.ElapsedTime);
             }
 
-            // Atajo de teclado (R) para detener y reiniciar la pelota en cualquier momento durante la simulación
             bool isTypingFormula = FormulaInput != null &&
                                    FormulaInput.FormulaInputField != null &&
                                    FormulaInput.FormulaInputField.isFocused;

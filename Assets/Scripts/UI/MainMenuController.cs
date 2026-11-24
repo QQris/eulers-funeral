@@ -2,7 +2,6 @@ using System.Globalization;
 using EulersFuneral.Audio;
 using EulersFuneral.Core.Data;
 using EulersFuneral.Gameplay;
-using EulersFuneral.Graphics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,7 +13,6 @@ namespace EulersFuneral.UI
     /// RF-01 & RF-02:
     /// Menú principal de Euler's Funeral (Jugar, Selección de niveles, Ajustes, Salir)
     /// y selector de niveles 0 a 5 con estados (Bloqueado, Disponible, Completado).
-    /// Soporta tanto escena dedicada (MainMenu.unity -> Gameplay.unity) como escena única.
     /// </summary>
     public class MainMenuController : MonoBehaviour
     {
@@ -31,8 +29,8 @@ namespace EulersFuneral.UI
 
         [Header("Selección de Niveles (RF-02)")]
         public LevelData[] ConfiguredLevels;
-        public Button[] LevelButtons = new Button[LevelDefinitions.TotalLevels];
-        public TextMeshProUGUI[] LevelButtonLabels = new TextMeshProUGUI[LevelDefinitions.TotalLevels];
+        public Button[] LevelButtons = new Button[LevelData.TotalLevels];
+        public TextMeshProUGUI[] LevelButtonLabels = new TextMeshProUGUI[LevelData.TotalLevels];
         public Button BackFromLevelSelectButton;
 
         [Header("Ajustes (RF-01)")]
@@ -42,7 +40,7 @@ namespace EulersFuneral.UI
         public TextMeshProUGUI SensitivityValueText;
         public Button BackFromSettingsButton;
 
-        [Header("Referencia Gameplay (Opcional si está en escena separada)")]
+        [Header("Referencia Gameplay (Opcional)")]
         public LevelManager LevelManager;
         public SceneFadeTransition SceneFader;
 
@@ -59,13 +57,6 @@ namespace EulersFuneral.UI
             if (_bindingsInitialized)
                 return;
             _bindingsInitialized = true;
-
-            if (ConfiguredLevels == null || ConfiguredLevels.Length == 0)
-            {
-                ConfiguredLevels = LevelDefinitions.CreateAllLevels();
-            }
-
-            EnsureSettingsControlsExist();
 
             if (PlayButton != null)
                 PlayButton.onClick.AddListener(OnPlayClicked);
@@ -114,167 +105,6 @@ namespace EulersFuneral.UI
             }
         }
 
-        public void EnsureSettingsControlsExist()
-        {
-            if (SettingsPanel == null)
-                return;
-
-            // Ajustar el bloque de texto de controles para dejar espacio superior a los sliders de Música y Sensibilidad
-            Transform controlsInfoTr = SettingsPanel.transform.Find("ControlsInfo");
-            if (controlsInfoTr != null)
-            {
-                RectTransform rt = controlsInfoTr.GetComponent<RectTransform>();
-                if (rt != null)
-                {
-                    rt.anchorMin = new Vector2(0.078f, 0.20f);
-                    rt.anchorMax = new Vector2(0.84f, 0.54f);
-                }
-            }
-
-            if (VolumeSlider == null)
-            {
-                VolumeSlider = CreateStyledSliderRow(
-                    SettingsPanel.transform,
-                    "VolumeSliderRow",
-                    "Volumen de Música y Efectos",
-                    new Vector2(0.078f, 0.69f),
-                    new Vector2(0.72f, 0.78f),
-                    0.0f, 1.0f,
-                    SaveSystem.Load().MasterVolume,
-                    out VolumeValueText);
-            }
-
-            if (SensitivitySlider == null)
-            {
-                SensitivitySlider = CreateStyledSliderRow(
-                    SettingsPanel.transform,
-                    "SensitivitySliderRow",
-                    "Sensibilidad de Cámara (Ratón)",
-                    new Vector2(0.078f, 0.57f),
-                    new Vector2(0.72f, 0.66f),
-                    0.2f, 3.0f,
-                    SaveSystem.Load().MouseSensitivity,
-                    out SensitivityValueText);
-            }
-        }
-
-        public static Slider CreateStyledSliderRow(
-            Transform parent,
-            string rowName,
-            string title,
-            Vector2 anchorMin,
-            Vector2 anchorMax,
-            float minVal,
-            float maxVal,
-            float initialVal,
-            out TextMeshProUGUI valueText)
-        {
-            var rowGo = new GameObject(rowName);
-            rowGo.transform.SetParent(parent, false);
-            var rowRt = rowGo.AddComponent<RectTransform>();
-            rowRt.anchorMin = anchorMin;
-            rowRt.anchorMax = anchorMax;
-            rowRt.offsetMin = Vector2.zero;
-            rowRt.offsetMax = Vector2.zero;
-
-            // Etiqueta izquierda
-            var labelGo = new GameObject("Label");
-            labelGo.transform.SetParent(rowGo.transform, false);
-            var labelRt = labelGo.AddComponent<RectTransform>();
-            labelRt.anchorMin = new Vector2(0f, 0f);
-            labelRt.anchorMax = new Vector2(0.42f, 1f);
-            labelRt.offsetMin = Vector2.zero;
-            labelRt.offsetMax = Vector2.zero;
-            var labelTmp = labelGo.AddComponent<TextMeshProUGUI>();
-            RuntimeFontHelper.EnsureFont(labelTmp);
-            labelTmp.text = title;
-            labelTmp.fontSize = 23f;
-            labelTmp.alignment = TextAlignmentOptions.Left;
-            labelTmp.color = new Color(0.9f, 0.9f, 0.9f, 1f);
-            labelTmp.raycastTarget = false;
-
-            // Contenedor del Slider
-            var sliderGo = new GameObject("Slider");
-            sliderGo.transform.SetParent(rowGo.transform, false);
-            var sliderRt = sliderGo.AddComponent<RectTransform>();
-            sliderRt.anchorMin = new Vector2(0.44f, 0.25f);
-            sliderRt.anchorMax = new Vector2(0.86f, 0.75f);
-            sliderRt.offsetMin = Vector2.zero;
-            sliderRt.offsetMax = Vector2.zero;
-
-            // Fondo de la barra
-            var bgGo = new GameObject("Background");
-            bgGo.transform.SetParent(sliderGo.transform, false);
-            var bgRt = bgGo.AddComponent<RectTransform>();
-            bgRt.anchorMin = new Vector2(0f, 0.35f);
-            bgRt.anchorMax = new Vector2(1f, 0.65f);
-            bgRt.offsetMin = Vector2.zero;
-            bgRt.offsetMax = Vector2.zero;
-            var bgImg = bgGo.AddComponent<Image>();
-            bgImg.color = new Color(0.22f, 0.22f, 0.22f, 1f);
-
-            // Área de relleno
-            var fillAreaGo = new GameObject("Fill Area");
-            fillAreaGo.transform.SetParent(sliderGo.transform, false);
-            var fillAreaRt = fillAreaGo.AddComponent<RectTransform>();
-            fillAreaRt.anchorMin = new Vector2(0f, 0.35f);
-            fillAreaRt.anchorMax = new Vector2(1f, 0.65f);
-            fillAreaRt.offsetMin = Vector2.zero;
-            fillAreaRt.offsetMax = Vector2.zero;
-
-            var fillGo = new GameObject("Fill");
-            fillGo.transform.SetParent(fillAreaGo.transform, false);
-            var fillRt = fillGo.AddComponent<RectTransform>();
-            fillRt.anchorMin = Vector2.zero;
-            fillRt.anchorMax = Vector2.one;
-            fillRt.offsetMin = Vector2.zero;
-            fillRt.offsetMax = Vector2.zero;
-            var fillImg = fillGo.AddComponent<Image>();
-            fillImg.color = new Color(0.20f, 0.60f, 1.0f, 1.0f);
-
-            // Área del Handle
-            var handleAreaGo = new GameObject("Handle Slide Area");
-            handleAreaGo.transform.SetParent(sliderGo.transform, false);
-            var handleAreaRt = handleAreaGo.AddComponent<RectTransform>();
-            handleAreaRt.anchorMin = Vector2.zero;
-            handleAreaRt.anchorMax = Vector2.one;
-            handleAreaRt.offsetMin = Vector2.zero;
-            handleAreaRt.offsetMax = Vector2.zero;
-
-            var handleGo = new GameObject("Handle");
-            handleGo.transform.SetParent(handleAreaGo.transform, false);
-            var handleRt = handleGo.AddComponent<RectTransform>();
-            handleRt.sizeDelta = new Vector2(18f, 28f);
-            var handleImg = handleGo.AddComponent<Image>();
-            handleImg.color = Color.white;
-
-            var slider = sliderGo.AddComponent<Slider>();
-            slider.fillRect = fillRt;
-            slider.handleRect = handleRt;
-            slider.targetGraphic = handleImg;
-            slider.direction = Slider.Direction.LeftToRight;
-            slider.minValue = minVal;
-            slider.maxValue = maxVal;
-            slider.SetValueWithoutNotify(initialVal);
-
-            // Texto de valor numérico a la derecha
-            var valGo = new GameObject("ValueText");
-            valGo.transform.SetParent(rowGo.transform, false);
-            var valRt = valGo.AddComponent<RectTransform>();
-            valRt.anchorMin = new Vector2(0.88f, 0f);
-            valRt.anchorMax = new Vector2(1f, 1f);
-            valRt.offsetMin = Vector2.zero;
-            valRt.offsetMax = Vector2.zero;
-            valueText = valGo.AddComponent<TextMeshProUGUI>();
-            RuntimeFontHelper.EnsureFont(valueText);
-            valueText.fontSize = 22f;
-            valueText.alignment = TextAlignmentOptions.Left;
-            valueText.color = Color.white;
-            valueText.raycastTarget = false;
-
-            return slider;
-        }
-
         public void ShowMainMenu()
         {
             gameObject.SetActive(true);
@@ -311,8 +141,6 @@ namespace EulersFuneral.UI
 
         public void ShowSettings()
         {
-            EnsureSettingsControlsExist();
-
             if (MainMenuPanel != null) MainMenuPanel.SetActive(false);
             if (LevelSelectPanel != null) LevelSelectPanel.SetActive(false);
             if (SettingsPanel != null) SettingsPanel.SetActive(true);
@@ -337,8 +165,8 @@ namespace EulersFuneral.UI
 
         public void RefreshLevelSelectButtons()
         {
-            if (ConfiguredLevels == null || ConfiguredLevels.Length == 0)
-                ConfiguredLevels = LevelDefinitions.CreateAllLevels();
+            if (ConfiguredLevels == null)
+                return;
 
             for (int i = 0; i < ConfiguredLevels.Length && i < LevelButtons.Length; i++)
             {
@@ -364,7 +192,7 @@ namespace EulersFuneral.UI
         private void OnPlayClicked()
         {
             int targetLevel = 0;
-            for (int i = 0; i < LevelDefinitions.TotalLevels; i++)
+            for (int i = 0; i < LevelData.TotalLevels; i++)
             {
                 if (SaveSystem.IsLevelUnlocked(i) && !SaveSystem.IsLevelCompleted(i))
                 {
